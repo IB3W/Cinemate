@@ -19,7 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _navigate() async {
-    await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 5));
     if (!mounted) return;
 
     final auth = Provider.of<AuthProvider>(context, listen: false);
@@ -46,7 +46,7 @@ class _SplashScreenState extends State<SplashScreen> {
               decoration: BoxDecoration(
                 gradient: RadialGradient(
                   colors: [
-                    AppTheme.primary.withOpacity(0.1),
+                    AppTheme.primary.withValues(alpha: 0.1),
                     Colors.transparent,
                   ],
                 ),
@@ -64,7 +64,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     color: AppTheme.cardColor,
                     borderRadius: BorderRadius.circular(22),
                     border: Border.all(
-                      color: AppTheme.primary.withOpacity(0.3),
+                      color: AppTheme.primary.withValues(alpha: 0.3),
                     ),
                   ),
                   child: const Icon(
