@@ -40,19 +40,6 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          // Background
-          Positioned.fill(
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: RadialGradient(
-                  colors: [
-                    AppTheme.primary.withValues(alpha: 0.1),
-                    Colors.transparent,
-                  ],
-                ),
-              ),
-            ),
-          ),
           // Logo
           Center(
             child: Column(
@@ -66,6 +53,13 @@ class _SplashScreenState extends State<SplashScreen> {
                     border: Border.all(
                       color: AppTheme.primary.withValues(alpha: 0.3),
                     ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppTheme.primary.withValues(alpha: 0.15),
+                        blurRadius: 40,
+                        spreadRadius: 10,
+                      ),
+                    ],
                   ),
                   child: const Icon(
                     Icons.movie_filter,
