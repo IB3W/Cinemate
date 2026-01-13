@@ -1,13 +1,310 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../../core/theme/app_theme.dart';
+import '../../../core/widgets/custom_text_field.dart';
+import '../../../providers/auth_provider.dart';
+import '../../../config/routes/app_routes.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
   @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  bool _showPassword = false;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _login() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+
+    final success = await authProvider.loginWithEmail(
+      _emailController.text.trim(),
+      _passwordController.text.trim(),
+    );
+
+    if (!mounted) return;
+
+    if (success) {
+      if (!authProvider.isEmailVerified) {
+        Navigator.pushReplacementNamed(context, AppRoutes.verifyEmail);
+      } else {
+        Navigator.pushReplacementNamed(context, AppRoutes.navigationShell);
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(authProvider.errorMessage ?? 'Login failed'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  Future<void> _loginWithGoogle() async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final success = await authProvider.loginWithGoogle();
+
+    if (!mounted) return;
+
+    if (success) {
+      Navigator.pushReplacementNamed(context, AppRoutes.navigationShell);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(authProvider.errorMessage ?? 'Google sign-in failed'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
+    final authProvider = Provider.of<AuthProvider>(context);
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
-      body: const Center(child: Text('Login Screen')),
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(18),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  const SizedBox(height: 28),
+
+                  Container(
+                    width: 78,
+                    height: 78,
+                    decoration: BoxDecoration(
+                      color: AppTheme.cardColor,
+                      borderRadius: BorderRadius.circular(22),
+                      border: Border.all(
+                        color: theme.primaryColor.withValues(alpha: 0.55),
+                      ),
+                    ),
+                    child: Icon(
+                      Icons.movie_filter,
+                      color: theme.primaryColor,
+                      size: 34,
+                    ),
+                  ),
+
+                  const SizedBox(height: 18),
+
+                  Text("Cinamate", style: textTheme.headlineMedium),
+
+                  const SizedBox(height: 8),
+
+                  Text(
+                    "Welcome back! Please enter your details.",
+                    style: textTheme.bodyMedium,
+                  ),
+
+                  const SizedBox(height: 26),
+
+                  CustomTextField(
+                    controller: _emailController,
+                    hintText: "Email",
+                    prefixIcon: Icons.email_outlined,
+                    keyboardType: TextInputType.emailAddress,
+                    validator: (v) {
+                      if (v == null || v.isEmpty) return "Email is required";
+                      if (!v.contains("@")) return "Enter valid email";
+                      return null;
+                    },
+                  ),
+
+                  const SizedBox(height: 14),
+
+                  CustomTextField(
+                    controller: _passwordController,
+                    hintText: "Password",
+                    prefixIcon: Icons.lock_outline,
+                    obscureText: !_showPassword,
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _showPassword ? Icons.visibility : Icons.visibility_off,
+                      ),
+                      onPressed: () =>
+                          setState(() => _showPassword = !_showPassword),
+                    ),
+                    validator: (v) {
+                      if (v == null || v.isEmpty) return "Password is required";
+                      if (v.length < 8) return "Min 8 characters";
+                      return null;
+                    },
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: authProvider.isLoading
+                          ? null
+                          : () => Navigator.pushNamed(
+                              context,
+                              AppRoutes.forgotPassword,
+                            ),
+                      child: const Text(
+                        "Forgot Password?",
+                        style: TextStyle(color: AppTheme.textSecondary),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  SizedBox(
+                    width: double.infinity,
+                    height: 54,
+                    child: ElevatedButton(
+                      onPressed: authProvider.isLoading ? null : _login,
+                      child: authProvider.isLoading
+                          ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                color: Colors.black,
+                                strokeWidth: 2,
+                              ),
+                            )
+                          : const Text("Log In"),
+                    ),
+                  ),
+
+                  const SizedBox(height: 18),
+
+                  Row(
+                    children: const [
+                      Expanded(child: Divider(color: AppTheme.border)),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 12),
+                        child: Text(
+                          "Or continue with",
+                          style: TextStyle(color: AppTheme.textSecondary),
+                        ),
+                      ),
+                      Expanded(child: Divider(color: AppTheme.border)),
+                    ],
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  Row(
+                    children: [
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: authProvider.isLoading
+                              ? null
+                              : _loginWithGoogle,
+                          child: Container(
+                            height: 52,
+                            decoration: BoxDecoration(
+                              color: AppTheme.cardColor,
+                              borderRadius: BorderRadius.circular(18),
+                              border: Border.all(color: AppTheme.border),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                 Icon(
+                                  Icons.g_mobiledata,
+                                  color: AppTheme.textPrimary,
+                                ),
+                                 SizedBox(width: 10),
+                                Text("Google", style: textTheme.titleMedium),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: authProvider.isLoading
+                              ? null
+                              : () {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                     SnackBar(
+                                      content: Text(
+                                        "Apple Login (needs apples device support)",
+                                      ),
+                                    ),
+                                  );
+                                },
+                          child: Container(
+                            height: 52,
+                            decoration: BoxDecoration(
+                              color: AppTheme.cardColor,
+                              borderRadius: BorderRadius.circular(18),
+                              border: Border.all(color: AppTheme.border),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(
+                                  Icons.apple,
+                                  color: AppTheme.textPrimary,
+                                ),
+                                const SizedBox(width: 10),
+                                Text("Apple", style: textTheme.titleMedium),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 24),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Don't have an account? ",
+                        style: textTheme.bodyMedium,
+                      ),
+                      GestureDetector(
+                        onTap: authProvider.isLoading
+                            ? null
+                            : () => Navigator.pushNamed(
+                                context,
+                                AppRoutes.register,
+                              ),
+                        child: Text(
+                          "Sign Up",
+                          style: TextStyle(
+                            color: theme.primaryColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
