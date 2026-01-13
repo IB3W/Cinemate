@@ -98,22 +98,24 @@ Future<void> _signOut() async {
 
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: EdgeInsets.all(25),
           child: Column(
+           crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Container(
-                height: 100,
-                width: 100,
-                decoration: BoxDecoration(
-                  color: AppTheme.cardColor,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: const Icon(
-                  Icons.mark_email_unread_outlined,
-                  size: 50,
-                  color: AppTheme.primary,
+              Center(
+                child: Container(
+                  width: 78,
+                 height: 78,
+                  decoration: BoxDecoration(
+                    color: AppTheme.cardColor,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: const Icon(
+                    Icons.mark_email_unread_outlined,
+                    size: 32,
+                    color: AppTheme.primary,
+                  ),
                 ),
               ),
               SizedBox(height: 32),
