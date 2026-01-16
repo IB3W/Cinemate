@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../home/screens/home_screen.dart';
-import '../screens/search_screen.dart';
-// import '../../library/screens/library_screen.dart';
-// import '../../profile/screens/profile_screen.dart';
+import '../../search/screens/search_screen.dart';
+import '../../library/screens/library_screen.dart';
+import '../../profile/screens/profile_screen.dart';
+import '../../../core/theme/app_theme.dart';
 
 class NavigationShell extends StatefulWidget {
   const NavigationShell({super.key});
@@ -17,8 +18,8 @@ class _NavigationShellState extends State<NavigationShell> {
   final List<Widget> _screens = [
     const HomeScreen(),
     const SearchScreen(),
-    const Center(child: Text('Library (Coming Soon)')), // Placeholder
-    const Center(child: Text('Profile (Coming Soon)')), // Placeholder
+    const LibraryScreen(),
+    const ProfileScreen(),
   ];
 
   @override
@@ -26,34 +27,36 @@ class _NavigationShellState extends State<NavigationShell> {
     return Scaffold(
       body: IndexedStack(index: _currentIndex, children: _screens),
       bottomNavigationBar: Container(
-        decoration: const BoxDecoration(
-          border: Border(top: BorderSide(color: Colors.white12)),
+        decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+          ),
         ),
         child: NavigationBar(
           selectedIndex: _currentIndex,
           onDestinationSelected: (index) =>
               setState(() => _currentIndex = index),
-          backgroundColor: Colors.black, 
-          indicatorColor: Colors.orange.withValues(alpha: 0.2), 
+          backgroundColor: AppTheme.background,
+          indicatorColor: AppTheme.primary.withValues(alpha: 0.1),
           destinations: const [
             NavigationDestination(
               icon: Icon(Icons.home_outlined),
-              selectedIcon: Icon(Icons.home, color: Colors.orange),
+              selectedIcon: Icon(Icons.home, color: AppTheme.primary),
               label: 'Home',
             ),
             NavigationDestination(
               icon: Icon(Icons.search_outlined),
-              selectedIcon: Icon(Icons.search, color: Colors.orange),
+              selectedIcon: Icon(Icons.search, color: AppTheme.primary),
               label: 'Search',
             ),
             NavigationDestination(
               icon: Icon(Icons.bookmark_outline),
-              selectedIcon: Icon(Icons.bookmark, color: Colors.orange),
+              selectedIcon: Icon(Icons.bookmark, color: AppTheme.primary),
               label: 'Library',
             ),
             NavigationDestination(
               icon: Icon(Icons.person_outline),
-              selectedIcon: Icon(Icons.person, color: Colors.orange),
+              selectedIcon: Icon(Icons.person, color: AppTheme.primary),
               label: 'Profile',
             ),
           ],

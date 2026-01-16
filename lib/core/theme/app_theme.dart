@@ -38,15 +38,15 @@ class AppTheme {
         suffixIconColor: textSecondary,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(18),
-          borderSide: const BorderSide(color: border),
+          borderSide: BorderSide(color: border),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(18),
-          borderSide: const BorderSide(color: border),
+          borderSide: BorderSide(color: border),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(18),
-          borderSide: const BorderSide(color: primary, width: 2),
+          borderSide: BorderSide(color: primary, width: 2),
         ),
       ),
 
@@ -58,7 +58,7 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(18),
           ),
-          textStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          textStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
         ),
       ),
 

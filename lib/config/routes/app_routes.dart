@@ -7,7 +7,7 @@ import '../../features/auth/screens/verify_email_screen.dart';
 import '../../features/navigation/screens/navigation_shell.dart';
 import '../../features/details/screens/details_screen.dart';
 import '../../data/models/content_item.dart';
-// import '../../features/home/screens/see_all_screen.dart';
+import '../../features/home/screens/see_all_screen.dart';
 
 class AppRoutes {
   static const String splash = '/';
@@ -17,7 +17,7 @@ class AppRoutes {
   static const String verifyEmail = '/verify-email';
   static const String navigationShell = '/navigation';
   static const String details = '/details';
-  // static const String seeAll = '/see-all';
+  static const String seeAll = '/see-all';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -44,14 +44,14 @@ class AppRoutes {
         final item = settings.arguments as ContentItem;
         return MaterialPageRoute(builder: (_) => DetailsScreen(item: item));
 
-      /*
       case seeAll:
         final args = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
-          builder: (_) =>
-              SeeAllScreen(title: args['title'], items: args['items']),
+          builder: (_) => SeeAllScreen(
+            title: args['title'] as String,
+            items: args['items'] as List<ContentItem>,
+          ),
         );
-      */
 
       default:
         return MaterialPageRoute(

@@ -7,23 +7,21 @@ class ContentHorizontalList extends StatelessWidget {
   final String title;
   final Future<List<ContentItem>> future;
   final Function(ContentItem) onItemTap;
+  final VoidCallback? onSeeAll;
 
   const ContentHorizontalList({
     super.key,
     required this.title,
     required this.future,
     required this.onItemTap,
+    this.onSeeAll,
   });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SectionHeader(
-          title: title,
-          onSeeAll: () {
-          },
-        ),
+        SectionHeader(title: title, onSeeAll: onSeeAll),
         const SizedBox(height: 16),
         SizedBox(
           height: 240,

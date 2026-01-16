@@ -45,7 +45,7 @@ class TmdbService {
     );
 
     try {
-      final response = await http.get(url);
+      final response = await http.get(url).timeout(const Duration(seconds: 10));
       if (response.statusCode == 200) {
         return json.decode(response.body);
       } else {
@@ -86,7 +86,7 @@ class TmdbService {
     bool allowPerson = true,
   }) async {
     try {
-      final response = await http.get(url);
+      final response = await http.get(url).timeout(const Duration(seconds: 10));
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         final List results = data['results'];

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/poster_card.dart';
 import '../../../data/models/content_item.dart';
 import '../../../repositories/content_repository.dart';
@@ -65,7 +66,7 @@ class _SearchScreenState extends State<SearchScreen> {
             _buildSearchHeader(),
             Expanded(
               child: _isLoading
-                  ? const Center(child: CircularProgressIndicator())
+                  ? Center(child: CircularProgressIndicator())
                   : _buildResultsGrid(),
             ),
           ],
@@ -82,13 +83,15 @@ class _SearchScreenState extends State<SearchScreen> {
           TextField(
             controller: _searchController,
             onSubmitted: (value) => _doSearch(value),
+            style: TextStyle(color: AppTheme.textPrimary),
             decoration: InputDecoration(
               hintText: 'Search...',
+              hintStyle: TextStyle(color: AppTheme.textSecondary),
               filled: true,
-              fillColor: Colors.grey[900],
-              prefixIcon: const Icon(Icons.search),
+              fillColor: AppTheme.inputFill,
+              prefixIcon: Icon(Icons.search, color: AppTheme.textSecondary),
               suffixIcon: IconButton(
-                icon: const Icon(Icons.clear),
+                icon: Icon(Icons.clear, color: AppTheme.textSecondary),
                 onPressed: () {
                   _searchController.clear();
                   _doSearch('');
@@ -137,7 +140,7 @@ class _SearchScreenState extends State<SearchScreen> {
       padding: const EdgeInsets.all(16),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
-        childAspectRatio: 2 / 3,
+        childAspectRatio: 0.5,
         crossAxisSpacing: 12,
         mainAxisSpacing: 12,
       ),
